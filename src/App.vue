@@ -4,8 +4,8 @@
       <div class="header">My Personal costs</div>
     </header>
     <main>
-      <add-payment-form @emitName="methodName" />
-      <PaymentDisplay show-items :items="paymentsList" />
+      <AddPaymentForm @emitName="methodName" />
+      <PaymentDisplay showItems :items="paymentsList" />
       {{ fields }}
     </main>
   </div>
@@ -21,8 +21,7 @@ export default {
     AddPaymentForm
   },
   data: () => ({
-    paymentsList: [],
-    fields: {}
+    paymentsList: []
   }),
   methods: {
     fetchData () {
@@ -46,7 +45,6 @@ export default {
     },
     methodName (data) {
       this.paymentsList = [...this.paymentsList, data]
-      this.fields.field3 = 'sdad'
     }
   },
   created () {
