@@ -1,9 +1,26 @@
 <template>
-  <div class="form">
-    <input placeholder="Amount" v-model="amount" />
-    <input placeholder="Type" v-model="type" />
-    <input placeholder="Date" v-model="date" />
-    <button @click="onSaveClick">Save!</button>
+  <div class="addData">
+    <button class="addForm" v-on:click="showItems = !showItems">
+      ADD NEW COST +
+    </button>
+    <div class="form" v-if="showItems">
+      <input
+        class="formField"
+        placeholder="Payment Date"
+        v-model="date"
+      /><br />
+      <input
+        class="formField"
+        placeholder="Payment Description"
+        v-model="category"
+      /><br />
+      <input
+        class="formField"
+        placeholder="Payment Amount"
+        v-model="value"
+      /><br />
+      <button class="saveBtn" @click="onSaveClick">Save!</button>
+    </div>
   </div>
 </template>
 
@@ -12,9 +29,15 @@ export default {
   name: 'AddPaymentForm',
   data () {
     return {
-      amount: '',
-      type: '',
+      value: '',
+      category: '',
       date: ''
+    }
+  },
+  props: {
+    showItems: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -29,8 +52,8 @@ export default {
   methods: {
     onSaveClick () {
       const data = {
-        amount: this.amount,
-        type: this.type,
+        value: this.value,
+        category: this.category,
         date: this.date || this.getCurrentDate
       }
       this.$emit('emitName', data)
@@ -39,4 +62,22 @@ export default {
 }
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.addForm {
+  background-color: #40e0d0;
+  color: white;
+  border: transparent;
+  margin: 15px;
+}
+.addData {
+  margin-bottom: 15px;
+}
+.formField {
+  margin-bottom: 10px;
+}
+.saveBtn {
+  background-color: #40e0d0;
+  color: white;
+  border: transparent;
+}
+</style>
