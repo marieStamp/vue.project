@@ -6,7 +6,7 @@
     <main>
       <AddPaymentForm @emitName="methodName" />
       <PaymentDisplay showItems :items="paymentsList" />
-      <!-- {{ fields }} -->
+      {{ fields }}
     </main>
   </div>
 </template>
