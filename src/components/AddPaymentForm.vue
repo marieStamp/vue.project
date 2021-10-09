@@ -31,13 +31,8 @@ export default {
     return {
       value: '',
       category: '',
-      date: ''
-    }
-  },
-  props: {
-    showItems: {
-      type: Boolean,
-      default: false
+      date: '',
+      showItems: false
     }
   },
   computed: {
