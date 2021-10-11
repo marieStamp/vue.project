@@ -9,15 +9,20 @@
         placeholder="Payment Date"
         v-model="date"
       /><br />
-      <input
-        class="formField"
+      <select
+        class="formField select"
         placeholder="Payment Description"
         v-model="category"
-      /><br />
+      >
+        <option v-for="option in categoryList" :key="option">
+          {{ option }}
+        </option>
+      </select>
+      <br />
       <input
         class="formField"
         placeholder="Payment Amount"
-        v-model="value"
+        v-model="amount"
       /><br />
       <button class="saveBtn" @click="onSaveClick">Save!</button>
     </div>
@@ -25,11 +30,21 @@
 </template>
 
 <script>
+import { mapGetters, mapActions, mapMutations } from 'vuex'
+import SelectCategory from './SelectCategory.vue'
+
 export default {
   name: 'AddPaymentForm',
+  components: { SelectCategory },
+  props: {
+    categoryList: {
+      type: Array,
+      default: () => []
+    }
+  },
   data () {
     return {
-      value: '',
+      amount: '',
       category: '',
       date: '',
       showItems: false
@@ -37,17 +52,20 @@ export default {
   },
   computed: {
     getCurrentDate () {
-      const today = new Date()
-      const d = today.getDate()
-      const m = today.getMonth() + 1
-      const y = today.getFullYear()
-      return `${d}.${m}.${y}`
-    }
+      return new Intl.DateTimeFormat('ru-RU', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      }).format(new Date())
+    },
+    ...mapGetters({
+      categories: 'getCategoryList'
+    })
   },
   methods: {
     onSaveClick () {
       const data = {
-        value: this.value,
+        amount: Number(this.amount),
         category: this.category,
         date: this.date || this.getCurrentDate
       }
@@ -69,6 +87,9 @@ export default {
 }
 .formField {
   margin-bottom: 10px;
+}
+.select {
+  width: 178.67px;
 }
 .saveBtn {
   background-color: #40e0d0;

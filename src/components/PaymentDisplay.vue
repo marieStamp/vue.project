@@ -10,7 +10,7 @@
       <div class="table__cell" title="ID">{{ index }}</div>
       <div class="table__cell" title="Date">{{ item.date }}</div>
       <div class="table__cell">{{ item.category }}</div>
-      <div class="table__cell">{{ item.value }}</div>
+      <div class="table__cell">{{ item.amount }}</div>
     </div>
   </div>
 </template>

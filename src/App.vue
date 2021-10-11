@@ -4,9 +4,9 @@
       <div class="header">My Personal costs</div>
     </header>
     <main>
-      <AddPaymentForm @emitName="methodName" />
-      <PaymentDisplay showItems :items="paymentsList" />
-      {{ fields }}
+      Total Price: {{ getFPV }}
+      <AddPaymentForm />
+      <PaymentDisplay :items="getPaymentsList" />
     </main>
   </div>
 </template>
@@ -14,41 +14,27 @@
 <script>
 import AddPaymentForm from './components/AddPaymentForm.vue'
 import PaymentDisplay from './components/PaymentDisplay.vue'
+
+import { mapMutations, mapGetters, mapActions } from 'vuex'
+
 export default {
   name: 'App',
   components: {
     PaymentDisplay,
     AddPaymentForm
   },
-  data: () => ({
-    paymentsList: []
-  }),
   methods: {
-    fetchData () {
-      return [
-        {
-          date: '28.03.2020',
-          category: 'Food',
-          value: 169
-        },
-        {
-          date: '24.03.2020',
-          category: 'Transport',
-          value: 360
-        },
-        {
-          date: '24.03.2020',
-          category: 'Food',
-          value: 532
-        }
-      ]
-    },
-    methodName (data) {
-      this.paymentsList = [...this.paymentsList, data]
-    }
+    ...mapMutations(['setPaymentsListData']),
+    ...mapActions(['fetchData', 'fetchCategory'])
   },
-  created () {
-    this.paymentsList = this.fetchData()
+  computed: {
+    ...mapGetters(['getFPV', 'getPaymentsList', 'getCategoryList']),
+    getFPV () {
+      return this.$store.getters.getPaymentsListFullPrice
+    },
+    paymentsList () {
+      return this.$store.getters.getPaymentsList
+    }
   }
 }
 </script>
@@ -64,5 +50,6 @@ export default {
 }
 .header {
   color: red;
+  margin-bottom: 15px;
 }
 </style>
