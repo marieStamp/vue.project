@@ -4,9 +4,9 @@
       <div class="header">My Personal costs</div>
     </header>
     <main>
-      <add-payment-form @emitName="methodName" />
-      <PaymentDisplay show-items :items="paymentsList" />
-      {{ fields }}
+      Total Price: {{ getFPV }}
+      <AddPaymentForm />
+      <PaymentDisplay :items="getPaymentsList" />
     </main>
   </div>
 </template>
@@ -14,50 +14,34 @@
 <script>
 import AddPaymentForm from './components/AddPaymentForm.vue'
 import PaymentDisplay from './components/PaymentDisplay.vue'
+
+import { mapMutations, mapGetters, mapActions } from 'vuex'
+
 export default {
   name: 'App',
   components: {
     PaymentDisplay,
     AddPaymentForm
   },
-  data: () => ({
-    paymentsList: [],
-    fields: {}
-  }),
   methods: {
-    fetchData () {
-      return [
-        {
-          date: '28.03.2020',
-          category: 'Food',
-          value: 169
-        },
-        {
-          date: '24.03.2020',
-          category: 'Transport',
-          value: 360
-        },
-        {
-          date: '24.03.2020',
-          category: 'Food',
-          value: 532
-        }
-      ]
-    },
-    methodName (data) {
-      this.paymentsList = [...this.paymentsList, data]
-      this.fields.field3 = 'sdad'
-    }
+    ...mapMutations(['setPaymentsListData']),
+    ...mapActions(['fetchData', 'fetchCategory'])
   },
-  created () {
-    this.paymentsList = this.fetchData()
+  computed: {
+    ...mapGetters(['getFPV', 'getPaymentsList', 'getCategoryList']),
+    getFPV () {
+      return this.$store.getters.getPaymentsListFullPrice
+    },
+    paymentsList () {
+      return this.$store.getters.getPaymentsList
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 #app {
-  font-family: Avenir, Helvetica, Arial;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -66,5 +50,6 @@ export default {
 }
 .header {
   color: red;
+  margin-bottom: 15px;
 }
 </style>
