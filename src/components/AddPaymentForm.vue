@@ -9,15 +9,16 @@
         placeholder="Payment Date"
         v-model="date"
       /><br />
+      <SelectCategory
+        :categories="categories"
+        @changeCategory="changeCategory"
+      />
+      <br />
       <input
-        class="formField"
-        placeholder="Payment Description"
-        v-model="category"
-      /><br />
-      <input
+        type="number"
         class="formField"
         placeholder="Payment Amount"
-        v-model="value"
+        v-model="amount"
       /><br />
       <button class="saveBtn" @click="onSaveClick">Save!</button>
     </div>
@@ -25,22 +26,40 @@
 </template>
 
 <script>
+import { mapGetters, mapActions, mapMutations } from 'vuex'
+import SelectCategory from './SelectCategory.vue'
+
 export default {
   name: 'AddPaymentForm',
+  components: { SelectCategory },
   data () {
     return {
-      value: '',
+      date: '',
       category: '',
-      date: ''
+      amount: '',
+      showItems: false
     }
   },
-  props: {
-    showItems: {
-      type: Boolean,
-      default: false
+  methods: {
+    ...mapActions(['fetchCategory', 'fetchData']),
+    ...mapMutations(['addDataToPaymentsList']),
+    changeCategory (selected) {
+      this.category = selected
+    },
+    onSaveClick () {
+      const { category, amount } = this
+      const data = {
+        date: this.date || this.getCurrentDate,
+        category,
+        amount
+      }
+      this.addDataToPaymentsList(data)
     }
   },
   computed: {
+    ...mapGetters({
+      categories: 'getCategoryList'
+    }),
     getCurrentDate () {
       const today = new Date()
       const d = today.getDate()
@@ -49,14 +68,10 @@ export default {
       return `${d}.${m}.${y}`
     }
   },
-  methods: {
-    onSaveClick () {
-      const data = {
-        value: this.value,
-        category: this.category,
-        date: this.date || this.getCurrentDate
-      }
-      this.$emit('emitName', data)
+  created () {
+    this.fetchData()
+    if (!this.categories.length) {
+      this.fetchCategory()
     }
   }
 }
@@ -73,7 +88,7 @@ export default {
   margin-bottom: 15px;
 }
 .formField {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 .saveBtn {
   background-color: #40e0d0;

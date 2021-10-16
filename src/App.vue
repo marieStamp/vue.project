@@ -4,9 +4,15 @@
       <div class="header">My Personal costs</div>
     </header>
     <main>
-      <AddPaymentForm @emitName="methodName" />
-      <PaymentDisplay showItems :items="paymentsList" />
-      <!-- {{ fields }} -->
+      Total Price: {{ getFPV }}
+      <AddPaymentForm />
+      <PaymentDisplay :items="getPaymentsList" />
+      <Pagination
+        :curPage="page"
+        :numOfPages="n"
+        :length="getPaymentsList.length"
+        @paginate="changePage"
+      />
     </main>
   </div>
 </template>
@@ -14,41 +20,39 @@
 <script>
 import AddPaymentForm from './components/AddPaymentForm.vue'
 import PaymentDisplay from './components/PaymentDisplay.vue'
+import { mapMutations, mapGetters, mapActions } from 'vuex'
+import Pagination from './components/Pagination.vue'
+
 export default {
   name: 'App',
   components: {
     PaymentDisplay,
-    AddPaymentForm
+    AddPaymentForm,
+    Pagination
   },
   data: () => ({
-    paymentsList: []
+    page: 1,
+    n: 3
   }),
   methods: {
-    fetchData () {
-      return [
-        {
-          date: '28.03.2020',
-          category: 'Food',
-          value: 169
-        },
-        {
-          date: '24.03.2020',
-          category: 'Transport',
-          value: 360
-        },
-        {
-          date: '24.03.2020',
-          category: 'Food',
-          value: 532
-        }
-      ]
-    },
-    methodName (data) {
-      this.paymentsList = [...this.paymentsList, data]
+    ...mapMutations(['setPaymentsListData']),
+    ...mapActions(['fetchData', 'fetchCategory']),
+    changePage (p) {
+      this.page = p
     }
   },
-  created () {
-    this.paymentsList = this.fetchData()
+  computed: {
+    ...mapGetters(['getFPV', 'getPaymentsList', 'getCategoryList']),
+    getFPV () {
+      return this.$store.getters.getPaymentsListFullPrice
+    },
+    paymentsList () {
+      return this.$store.getters.getPaymentsList
+    },
+    currentElements () {
+      const { n, page } = this
+      return this.paymentsList.slice(n * (page - 1), n * (page - 1) + n)
+    }
   }
 }
 </script>
@@ -64,5 +68,6 @@ export default {
 }
 .header {
   color: red;
+  margin-bottom: 15px;
 }
 </style>
