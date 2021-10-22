@@ -1,55 +1,65 @@
 <template>
   <div id="app">
-    <header>
-      <div class="header">My Personal costs</div>
+    <header class="header">
+      <router-link to="/dashboard">dashboard</router-link>
+      <router-link to="/about">about</router-link>
+      <div @click="goToPage('NotFound')">404</div>
+      <!-- <a href="dashboard">dashboard</a>
+      <a href="about">about</a>
+      <a href="notfound">not found</a> -->
     </header>
     <main>
-      <AddPaymentForm @emitName="methodName" />
-      <PaymentDisplay showItems :items="paymentsList" />
-      {{ fields }}
+      <router-view />
+      <!-- <Dashboard v-if="page === 'dashboard'" />
+      <About v-if="page === 'about'" />
+      <NotFound v-if="page === 'notfound'" /> -->
     </main>
   </div>
 </template>
 
 <script>
-import AddPaymentForm from './components/AddPaymentForm.vue'
-import PaymentDisplay from './components/PaymentDisplay.vue'
+// import About from './views/About.vue'
+// import Dashboard from './views/Dashboard.vue'
+// import NotFound from './views/NotFound.vue'
 export default {
   name: 'App',
   components: {
-    PaymentDisplay,
-    AddPaymentForm
+    // About,
+    // Dashboard,
+    // NotFound
   },
   data: () => ({
-    paymentsList: []
+    // page: 'dashboard'
   }),
   methods: {
-    fetchData () {
-      return [
-        {
-          date: '28.03.2020',
-          category: 'Food',
-          value: 169
-        },
-        {
-          date: '24.03.2020',
-          category: 'Transport',
-          value: 360
-        },
-        {
-          date: '24.03.2020',
-          category: 'Food',
-          value: 532
-        }
-      ]
-    },
-    methodName (data) {
-      this.paymentsList = [...this.paymentsList, data]
+    goToPage (pageName) {
+      this.$router.push({
+        name: pageName
+      })
     }
+    // setPage () {
+    //   this.page = location.pathname.slice(1)
+    // }
   },
-  created () {
-    this.paymentsList = this.fetchData()
+  mounted () {
+    //   const links = document.querySelectorAll('a')
+    //   links.forEach(link => {
+    //     link.addEventListener('click', event => {
+    //       event.preventDefault()
+    //       history.pushState({}, '', link.href)
+    //       this.setPage()
+    //     })
+    //   })
+    //   this.setPage()
+    //   window.addEventListener('popstate', () => {
+    //     this.setPage()
+    //   })
   }
+  // computed: {},
+  // created () {
+  //   this.$store.dispatch('fetchData')
+  //   this.$store.dispatch('fetchCategory')
+  // }
 }
 </script>
 
@@ -64,5 +74,12 @@ export default {
 }
 .header {
   color: red;
+  margin-bottom: 15px;
+  & a {
+    margin-right: 10px;
+    &:hover {
+      color: #40e0d0;
+    }
+  }
 }
 </style>
