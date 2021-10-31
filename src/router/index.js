@@ -1,60 +1,42 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-
-import Dashboard from '../views/Dashboard.vue'
-import About from '../views/About.vue'
-import NotFound from '../views/NotFound.vue'
+import Vue from "vue"
+import Router from "vue-router"
 
 Vue.use(Router)
 
 const router = new Router({
-  mode: 'history',
+  mode: "history",
   routes: [
     {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: Dashboard
-    },
-    // {
-    //   path: '/dashboard/:page',
-    //   name: 'dashboard',
-    //   component: Dashboard
-    // },
-    {
-      path: '/add/payment/:category',
-      name: 'AddPaymentFormLink',
-      component: Dashboard
+      path: "/dashboard",
+      name: "dashboard",
+      component: () =>
+        import(/* webpackChunkName: "PageDashBoard" */ "../views/Dashboard.vue")
     },
     {
-      path: '/about',
-      name: 'About',
-      component: About
+      path: "/add/payment/:category",
+      name: "AddPaymentFormLink",
+      component: () =>
+        import(/* webpackChunkName: "PageDashBoard" */ "../views/Dashboard.vue")
     },
     {
-      path: '/404',
-      name: 'NotFound',
-      component: NotFound
+      path: "/about",
+      name: "About",
+      component: () =>
+        import(/* webpackChunkName: "About" */ "../views/About.vue")
+    },
+    {
+      path: "/404",
+      name: "NotFound",
+      component: () =>
+        import(/* webpackChunkName: "NotFound" */ "../views/NotFound.vue")
     }
-    // {
-    //   path: '*',
-    //   component: NotFound
-    // }
   ]
 })
 
-// const user = false
-// router.beforeEach((to, from, next) => {
-//   if (!user && to.name !== 'NotFound') {
-//     next({ name: 'NotFound' })
-//   } else {
-//     next()
-//   }
-// })
-
 const titles = {
-  dashboard: 'dashboard',
-  About: 'About',
-  NotFound: 'NotFound'
+  dashboard: "dashboard",
+  About: "About",
+  NotFound: "NotFound"
 }
 router.afterEach((to, from) => {
   document.title = titles[to.name]

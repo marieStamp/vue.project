@@ -1,5 +1,5 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from "vue"
+import Vuex from "vuex"
 
 Vue.use(Vuex)
 
@@ -17,7 +17,24 @@ export default new Vuex.Store({
     },
     addDataToPaymentsList (state, payload) {
       state.paymentsList.push(payload)
+    },
+    deleteDataFromPaymentsList (state, payload) {
+      state.paymentsList = state.paymentsList.filter(
+        item => item.id !== payload
+      )
+    },
+    updateDataToPaymentsList (state, payload) {
+      const item = state.paymentsList.find(item => item.id === payload.id)
+      if (item) {
+        Object.assign(item, payload)
+      }
     }
+    // editPaymentsList (state, payload) {
+    //   Vue.set(state.paymentsList, 0, payload)
+    // },
+    // deleteDataFromPaymentsList (state, payload) {
+    //   state.paymentsList.splice(payload, 1)
+    // }
   },
   actions: {
     fetchData ({ commit }) {
@@ -26,29 +43,29 @@ export default new Vuex.Store({
           const items = []
           const pages = {
             page1: [
-              { id: 1, date: '20.01.2021', category: 'Food', amount: 169 },
-              { id: 2, date: '05.02.2021', category: 'Education', amount: 50 },
-              { id: 3, date: '22.02.2021', category: 'Sport', amount: 450 }
+              { id: 1, date: "20.01.2021", category: "Food", amount: 169 },
+              { id: 2, date: "05.02.2021", category: "Education", amount: 50 },
+              { id: 3, date: "22.02.2021", category: "Sport", amount: 450 }
             ],
             page2: [
-              { id: 4, date: '03.03.2021', category: 'Transport', amount: 969 },
+              { id: 4, date: "03.03.2021", category: "Transport", amount: 969 },
               {
                 id: 5,
-                date: '15.03.2021',
-                category: 'Education',
+                date: "15.03.2021",
+                category: "Education",
                 amount: 1500
               },
-              { id: 6, date: '20.04.2021', category: 'Food', amount: 200 }
+              { id: 6, date: "20.04.2021", category: "Food", amount: 200 }
             ],
             page3: [
-              { id: 7, date: '24.05.2021', category: 'Transport', amount: 969 },
+              { id: 7, date: "24.05.2021", category: "Transport", amount: 969 },
               {
                 id: 8,
-                date: '04.06.2021',
-                category: 'Education',
+                date: "04.06.2021",
+                category: "Education",
                 amount: 1500
               },
-              { id: 9, date: '25.08.2021', category: 'Food', amount: 200 }
+              { id: 9, date: "25.08.2021", category: "Food", amount: 200 }
             ]
           }
           for (const pagesKey in pages) {
@@ -57,18 +74,18 @@ export default new Vuex.Store({
             })
           }
           resolve(items)
-        }, 2000)
+        }, 1000)
       }).then(res => {
-        commit('setPaymentsListData', res)
+        commit("setPaymentsListData", res)
       })
     },
     fetchCategory ({ commit }) {
       return new Promise(resolve => {
         setTimeout(() => {
-          resolve(['Food', 'Transport', 'Education', 'Sport', 'Entertainment'])
+          resolve(["Food", "Transport", "Education", "Sport", "Entertainment"])
         }, 1000)
       }).then(res => {
-        commit('setCategoryList', res)
+        commit("setCategoryList", res)
       })
     }
   },

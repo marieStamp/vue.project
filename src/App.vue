@@ -3,35 +3,41 @@
     <header class="header">
       <router-link to="/dashboard">dashboard</router-link>
       <router-link to="/about">about</router-link>
-      <div @click="goToPage('NotFound')">404</div>
-      <!-- <a href="dashboard">dashboard</a>
-      <a href="about">about</a>
-      <a href="notfound">not found</a> -->
+      <router-link to="/404">not found</router-link>
     </header>
     <main>
       <router-view />
-      <!-- <Dashboard v-if="page === 'dashboard'" />
-      <About v-if="page === 'about'" />
-      <NotFound v-if="page === 'notfound'" /> -->
     </main>
+    <transition name="fade">
+      <modal-window v-if="modalIsShow" :settings="modalSettings" />
+    </transition>
+    <transition name="fade">
+      <context-menu />
+    </transition>
   </div>
 </template>
 
 <script>
-// import About from './views/About.vue'
-// import Dashboard from './views/Dashboard.vue'
-// import NotFound from './views/NotFound.vue'
+import ContextMenu from "./components/ContextMenu.vue"
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    // About,
-    // Dashboard,
-    // NotFound
+    ContextMenu,
+    ModalWindow: () => import("./components/ModalWindow.vue")
   },
   data: () => ({
-    // page: 'dashboard'
+    modalIsShow: false,
+    modalSettings: {}
   }),
   methods: {
+    onShown (settings) {
+      this.modalSettings = settings
+      this.modalIsShow = true
+    },
+    onHide () {
+      this.modalIsShow = false
+      this.modalSettings = {}
+    },
     goToPage (pageName) {
       this.$router.push({
         name: pageName
@@ -42,18 +48,8 @@ export default {
     // }
   },
   mounted () {
-    //   const links = document.querySelectorAll('a')
-    //   links.forEach(link => {
-    //     link.addEventListener('click', event => {
-    //       event.preventDefault()
-    //       history.pushState({}, '', link.href)
-    //       this.setPage()
-    //     })
-    //   })
-    //   this.setPage()
-    //   window.addEventListener('popstate', () => {
-    //     this.setPage()
-    //   })
+    this.$modal.EventBus.$on("onShown", this.onShown)
+    this.$modal.EventBus.$on("onClose", this.onHide)
   }
   // computed: {},
   // created () {
@@ -81,5 +77,13 @@ export default {
       color: #40e0d0;
     }
   }
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

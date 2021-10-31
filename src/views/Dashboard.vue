@@ -1,7 +1,7 @@
 <template>
   <div>
+    <button @click="addPayment">Add Payment Form +</button><br />
     Total Price: {{ getFPV }}
-    <AddPaymentForm />
     <PaymentDisplay :items="getPaymentsList" />
     <router-link to="/add/payment/Food?value=200" class="payments"
       >Food/200</router-link
@@ -22,30 +22,31 @@
 </template>
 
 <script>
-import AddPaymentForm from '../components/AddPaymentForm.vue'
-import PaymentDisplay from '../components/PaymentDisplay.vue'
-import { mapMutations, mapGetters, mapActions } from 'vuex'
-import Pagination from '../components/Pagination.vue'
+import PaymentDisplay from "../components/PaymentDisplay.vue"
+import { mapMutations, mapGetters, mapActions } from "vuex"
+import Pagination from "../components/Pagination.vue"
 export default {
   components: {
     PaymentDisplay,
-    AddPaymentForm,
     Pagination
   },
-  name: 'Dashboard',
+  name: "Dashboard",
   data: () => ({
     page: 1,
     n: 3
   }),
   methods: {
-    ...mapMutations(['setPaymentsListData']),
-    ...mapActions(['fetchData', 'fetchCategory']),
+    ...mapMutations(["setPaymentsListData"]),
+    ...mapActions(["fetchData", "fetchCategory"]),
     changePage (p) {
       this.page = p
+    },
+    addPayment () {
+      this.$modal.show({ title: "Add Payment Form", content: "AddPaymentForm" })
     }
   },
   computed: {
-    ...mapGetters(['getFPV', 'getPaymentsList', 'getCategoryList']),
+    ...mapGetters(["getFPV", "getPaymentsList"]),
     getFPV () {
       return this.$store.getters.getPaymentsListFullPrice
     },
@@ -59,8 +60,8 @@ export default {
   },
   created () {
     this.page = Number(this.$route.params.page)
-    this.$store.dispatch('fetchData')
-    this.$store.dispatch('fetchCategory')
+    this.$store.dispatch("fetchData")
+    this.$store.dispatch("fetchCategory")
   }
 }
 </script>
@@ -68,5 +69,11 @@ export default {
 <style lang="scss" scope>
 .payments {
   margin-right: 10px;
+}
+button {
+  background-color: #40e0d0;
+  color: white;
+  border: transparent;
+  margin-bottom: 15px;
 }
 </style>

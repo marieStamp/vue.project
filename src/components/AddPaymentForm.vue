@@ -1,9 +1,9 @@
 <template>
   <div class="addData">
-    <button class="addForm" v-on:click="showItems = !showItems">
+    <!-- <button class="addForm" v-on:click="showItems = !showItems">
       ADD NEW COST +
-    </button>
-    <div class="form" v-if="showItems" :data="data">
+    </button> -->
+    <div class="form">
       <input
         class="formField"
         placeholder="Payment Date"
@@ -26,26 +26,23 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex'
-import SelectCategory from './SelectCategory.vue'
+import { mapGetters, mapActions, mapMutations } from "vuex"
+import SelectCategory from "./SelectCategory.vue"
 
 export default {
-  name: 'AddPaymentForm',
+  name: "AddPaymentForm",
   components: { SelectCategory },
-  props: {
-    data: Object
-  },
   data () {
     return {
-      date: '',
-      category: '',
-      amount: '',
-      showItems: false
+      date: "",
+      category: "",
+      amount: ""
+      // showItems: false
     }
   },
   methods: {
-    ...mapActions(['fetchCategory', 'fetchData']),
-    ...mapMutations(['addDataToPaymentsList']),
+    ...mapActions(["fetchCategory", "fetchData"]),
+    ...mapMutations(["addDataToPaymentsList"]),
     changeCategory (selected) {
       this.category = selected
     },
@@ -58,10 +55,16 @@ export default {
       }
       this.addDataToPaymentsList(data)
     }
+    // addData (data) {
+    //   this.$store.commit({ type: "addDataToPaymentsList" }, data)
+    // },
   },
   computed: {
+    categoryList () {
+      return this.$store.getters.getCategoryList()
+    },
     ...mapGetters({
-      categories: 'getCategoryList'
+      categories: "getCategoryList"
     }),
     getCurrentDate () {
       const today = new Date()
@@ -71,7 +74,7 @@ export default {
       return `${d}.${m}.${y}`
     },
     getAmountFromRoute () {
-      return Number(this.$route.query?.value || '')
+      return Number(this.$route.query?.value || "")
     }
   },
   created () {
