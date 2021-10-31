@@ -1,63 +1,67 @@
 <template>
   <div id="app">
-    <header>
-      <div class="header">My Personal costs</div>
+    <header class="header">
+      <router-link to="/dashboard">dashboard</router-link>
+      <router-link to="/about">about</router-link>
+      <router-link to="/404">not found</router-link>
     </header>
     <main>
-      <add-payment-form @emitName="methodName" />
-      <PaymentDisplay show-items :items="paymentsList" />
-      {{ fields }}
+      <router-view />
     </main>
+    <transition name="fade">
+      <modal-window v-if="modalIsShow" :settings="modalSettings" />
+    </transition>
+    <transition name="fade">
+      <context-menu />
+    </transition>
   </div>
 </template>
 
 <script>
-import AddPaymentForm from './components/AddPaymentForm.vue'
-import PaymentDisplay from './components/PaymentDisplay.vue'
+import ContextMenu from "./components/ContextMenu.vue"
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    PaymentDisplay,
-    AddPaymentForm
+    ContextMenu,
+    ModalWindow: () => import("./components/ModalWindow.vue")
   },
   data: () => ({
-    paymentsList: [],
-    fields: {}
+    modalIsShow: false,
+    modalSettings: {}
   }),
   methods: {
-    fetchData () {
-      return [
-        {
-          date: '28.03.2020',
-          category: 'Food',
-          value: 169
-        },
-        {
-          date: '24.03.2020',
-          category: 'Transport',
-          value: 360
-        },
-        {
-          date: '24.03.2020',
-          category: 'Food',
-          value: 532
-        }
-      ]
+    onShown (settings) {
+      this.modalSettings = settings
+      this.modalIsShow = true
     },
-    methodName (data) {
-      this.paymentsList = [...this.paymentsList, data]
-      this.fields.field3 = 'sdad'
+    onHide () {
+      this.modalIsShow = false
+      this.modalSettings = {}
+    },
+    goToPage (pageName) {
+      this.$router.push({
+        name: pageName
+      })
     }
+    // setPage () {
+    //   this.page = location.pathname.slice(1)
+    // }
   },
-  created () {
-    this.paymentsList = this.fetchData()
+  mounted () {
+    this.$modal.EventBus.$on("onShown", this.onShown)
+    this.$modal.EventBus.$on("onClose", this.onHide)
   }
+  // computed: {},
+  // created () {
+  //   this.$store.dispatch('fetchData')
+  //   this.$store.dispatch('fetchCategory')
+  // }
 }
 </script>
 
 <style lang="scss" scoped>
 #app {
-  font-family: Avenir, Helvetica, Arial;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -66,5 +70,20 @@ export default {
 }
 .header {
   color: red;
+  margin-bottom: 15px;
+  & a {
+    margin-right: 10px;
+    &:hover {
+      color: #40e0d0;
+    }
+  }
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
