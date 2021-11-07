@@ -1,14 +1,32 @@
 <template>
-  <div>
-    <input type="text" placeholder="Name" /><br />
-    <input type="text" placeholder="Last Name" /><br />
-    <button>Save!</button>
-  </div>
+  <v-card>
+    <v-text-field
+      class="pl-2"
+      label="Name"
+      :rules="rules"
+      hide-details="auto"
+    ></v-text-field>
+    <v-text-field
+      class="pl-2"
+      label="Last Name"
+      :rules="rules"
+      hide-details="auto"
+    ></v-text-field>
+    <div class="d-flex justify-center">
+      <v-btn class="mt-3" color="teal" dark>Save!</v-btn>
+    </div>
+  </v-card>
 </template>
 
 <script>
 export default {
-  name: "Auth"
+  name: "Auth",
+  data: () => ({
+    rules: [
+      value => !!value || "Required.",
+      value => (value && value.length >= 1) || "Min 1 character"
+    ]
+  })
 }
 </script>
 

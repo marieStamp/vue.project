@@ -29,12 +29,6 @@ export default new Vuex.Store({
         Object.assign(item, payload)
       }
     }
-    // editPaymentsList (state, payload) {
-    //   Vue.set(state.paymentsList, 0, payload)
-    // },
-    // deleteDataFromPaymentsList (state, payload) {
-    //   state.paymentsList.splice(payload, 1)
-    // }
   },
   actions: {
     fetchData ({ commit }) {
@@ -74,7 +68,7 @@ export default new Vuex.Store({
             })
           }
           resolve(items)
-        }, 1000)
+        }, 300)
       }).then(res => {
         commit("setPaymentsListData", res)
       })
@@ -83,7 +77,7 @@ export default new Vuex.Store({
       return new Promise(resolve => {
         setTimeout(() => {
           resolve(["Food", "Transport", "Education", "Sport", "Entertainment"])
-        }, 1000)
+        }, 500)
       }).then(res => {
         commit("setCategoryList", res)
       })

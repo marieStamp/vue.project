@@ -1,16 +1,13 @@
 <template>
-  <div @click="onClose">
-    <div class="context" v-if="shown">
-      <div
-        class="context_item"
-        v-for="item in items"
-        :key="item.text"
-        @click="onClick(item)"
-      >
-        {{ item.text }}
-      </div>
-    </div>
-  </div>
+  <v-list>
+    <v-list-item
+      v-for="item in editItem"
+      :key="item.text"
+      @click="onClick(item)"
+    >
+      <v-list-item-title v-text="item.text"></v-list-item-title>
+    </v-list-item>
+  </v-list>
 </template>
 
 <script>
@@ -18,9 +15,12 @@ export default {
   name: "ContextMenu",
   data () {
     return {
-      items: [],
-      shown: false
+      // items: [],
+      // shown: false
     }
+  },
+  props: {
+    editItem: []
   },
   methods: {
     onClick (item) {
@@ -35,15 +35,15 @@ export default {
       this.items = []
       this.shown = false
     }
-  },
-  mounted () {
-    this.$context.EventBus.$on("shown", this.onShown)
-    this.$context.EventBus.$on("close", this.onClose)
-  },
-  beforeDestroy () {
-    this.$context.EventBus.$off("shown", this.onShown)
-    this.$context.EventBus.$off("close", this.onClose)
   }
+  // mounted () {
+  //   this.$context.EventBus.$on("shown", this.onShown)
+  //   this.$context.EventBus.$on("close", this.onClose)
+  // },
+  // beforeDestroy () {
+  //   this.$context.EventBus.$off("shown", this.onShown)
+  //   this.$context.EventBus.$off("close", this.onClose)
+  // }
 }
 </script>
 
